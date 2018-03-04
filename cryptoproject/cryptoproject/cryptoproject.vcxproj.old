@@ -10,6 +10,7 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+<<<<<<< HEAD
   <ItemGroup>
     <ClCompile Include="CryptoMain_Initial.cpp" />
     <ClCompile Include="DecryptData_Initial.cpp" />
@@ -24,6 +25,8 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="SHA-256.h" />
   </ItemGroup>
+=======
+>>>>>>> origin/master
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1AE97F43-755A-4EE5-B5A2-2736EE4A39A8}</ProjectGuid>
     <RootNamespace>cryptoproject</RootNamespace>
@@ -55,12 +58,11 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AssemblerOutput>All</AssemblerOutput>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -81,6 +83,11 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+<<<<<<< HEAD
+=======
+  <ItemGroup>
+  </ItemGroup>
+>>>>>>> origin/master
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
