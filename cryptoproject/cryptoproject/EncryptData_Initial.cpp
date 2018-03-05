@@ -66,24 +66,16 @@ int encryptData(char *data, int dataLength)
 			mov al, byte ptr[esi+ecx]				// get the next byte of the password hash
 						// get 5th byte of password hash
 			mov ebx, 2
-				// get 3rd byte of password hash
-						// get 5th byte of password hash
 
-				// gets 5th and 6th bytes of password hash ( gPasswordHash[4] and gPasswordHash[5] ) into ax
-			// gets 4 bytes, as in:  unsigned int X = *( (unsigned int*) &gPasswordHash[4] );
+			lea al, byte ptr[gptrKey + ebx]		// THIS IS INCORRECT - will add the address of the gptrKey global variable (NOT the value that gptrKey holds) *change mov to lea maybe*
 
-			// get's 3rd byte of gkey[] data
-
-			mov al, byte ptr[gptrKey + ebx]		// THIS IS INCORRECT - will add the address of the gptrKey global variable (NOT the value that gptrKey holds) *change mov to lea maybe*
-
-			mov al, byte ptr[esi + 0xd];			// access 14th byte in gkey[]: 0, 1, 2 ... d is the 14th byte
-			mov edi, data				// Put ADDRESS of first data element into edi
-			xor byte ptr[edi], 1		// Exclusive-or the 2nd byte of data with the 14th element of the keyfile
+			mov edi, data				// Put ADDRESS of first data element into edi, 
+			xor byte ptr[edi], 1		// Exclusive-or byte 
 			// NOTE: Keyfile[14] = 0x21, that value changes the case of a letter and flips the LSB
 			// Capital "B" = 0x42 becomes lowercase "c" since 0x42 xor 0x21 = 0x63
 			cmp ecx, datalength // check to see if we have reached the end of the data file 
 			inc ecx
-			jb Start 
+			jb Start // jump to start of loop if ecx is smaller than datalength 
 			
 	}
 	return resulti;
