@@ -18,7 +18,7 @@ int decryptData(char *data, int dataLength)
 	// Set up the stack frame and assign variables in assembly if you need to do so
 	// access the parameters BEFORE setting up your own stack frame
 	// Also, you cannot use a lot of global variables - work with registers
-
+	/*
 	__asm {
 		// you will need to reference some of these global variables
 		// (gptrPasswordHash or gPasswordHash), (gptrKey or gkey), gNumRounds
@@ -49,7 +49,33 @@ int decryptData(char *data, int dataLength)
 									// NOTE: Keyfile[14] = 0x21, that value changes the case of a letter and flips the LSB
 									// Lowercase "c" = 0x63 becomes capital "B" since 0x63 xor 0x21 = 0x42
 	}
+	*/
+	__asm {// you will need to reference some of these global variables
+		// (gptrPasswordHash or gPasswordHash), (gptrKey or gkey), gNumRounds
 
+		// simple example that xors 2nd byte of data with 14th byte in the key file
+		AND ecx, 0 //clear ecx from any residual data from prior operations 
+			lea esi, gkey				// put the ADDRESS of gkey into esi
+			mov esi, gptrKey;			// put the ADDRESS of gkey into esi (since *gptrKey = gkey)
+
+		lea	esi, gPasswordHash		// put ADDRESS of gPasswordHash into esi
+			mov esi, gptrPasswordHash	// put ADDRESS of gPasswordHash into esi (since unsigned char *gptrPasswordHash = gPasswordHash)
+
+		Start : // start of the loop 
+		mov al, byte ptr[esi + ecx]				// get the next byte of the password hash
+
+			mov ebx, 2
+
+			mov al, byte ptr[gptrKey + ebx]		// THIS IS INCORRECT - will add the address of the gptrKey global variable (NOT the value that gptrKey holds) *change mov to lea maybe*
+
+			mov edi, data				// Put ADDRESS of first data element into edi, 
+			xor byte ptr[edi + ecx], 1		// Exclusive-or byte 
+
+			cmp ecx, dataLength // check to see if we have reached the end of the data file 
+			inc ecx
+			jb Start // jump to start of loop if ecx is smaller than datalength 
+
+	}
 	return resulti;
 } // decryptData
 
