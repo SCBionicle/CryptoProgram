@@ -70,7 +70,7 @@ int encryptData(char *data, int dataLength)
 			lea al, byte ptr[gptrKey + ebx]		// THIS IS INCORRECT - will add the address of the gptrKey global variable (NOT the value that gptrKey holds) *change mov to lea maybe*
 
 			mov edi, data				// Put ADDRESS of first data element into edi, 
-			xor byte ptr[edi], 1		// Exclusive-or byte 
+			xor byte ptr[edi + ecx], 1		// Exclusive-or byte 
 			
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
 			inc ecx
