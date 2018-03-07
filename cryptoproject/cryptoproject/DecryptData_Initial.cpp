@@ -55,11 +55,8 @@ int decryptData(char *data, int dataLength)
 
 		
 		AND ecx, 0 //clear ecx from any residual data from prior operations 
-
-		Start : // start of the loop 
-		mov al, byte ptr[esi + ecx]				// get the next byte of the password hash
-		mov ebx, 2
-		mov edi, data				// Put ADDRESS of first data element into edi, 
+		mov edi, data				// Put ADDRESS of first data element into edi,
+		Start : // start of the loop  
 		xor byte ptr[edi + ecx], 1		// Exclusive-or byte 
 		inc ecx
 		cmp ecx, dataLength // check to see if we have reached the end of the data file 
