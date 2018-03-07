@@ -59,9 +59,9 @@ int encryptData(char *data, int dataLength)
 			Start: // start of the loop 
 			mov al, byte ptr[esi+ecx]				// get the next byte of the password hash
 			mov edi, data				// Put ADDRESS of first data element into edi, 
-			xor byte ptr[edi + ecx], 1		// Exclusive-or byte 
-			cmp ecx, dataLength // check to see if we have reached the end of the data file 
+			xor byte ptr[edi + ecx], 1		// Exclusive-or byte
 			inc ecx
+			cmp ecx, dataLength // check to see if we have reached the end of the data file 
 			jb Start // jump to start of loop if ecx is smaller than datalength 
 			
 	}

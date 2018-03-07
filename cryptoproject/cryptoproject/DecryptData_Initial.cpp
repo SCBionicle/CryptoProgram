@@ -61,8 +61,8 @@ int decryptData(char *data, int dataLength)
 		mov ebx, 2
 		mov edi, data				// Put ADDRESS of first data element into edi, 
 		xor byte ptr[edi + ecx], 1		// Exclusive-or byte 
-		cmp ecx, dataLength // check to see if we have reached the end of the data file 
 		inc ecx
+		cmp ecx, dataLength // check to see if we have reached the end of the data file 
 		jb Start // jump to start of loop if ecx is smaller than datalength 
 
 	}
