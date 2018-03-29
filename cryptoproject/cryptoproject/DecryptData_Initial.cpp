@@ -58,7 +58,7 @@ int decryptData(char *data, int dataLength)
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
 		//xor byte ptr[edi + ecx], 'A'		// Seth - Exclusive-or byte
-		mov bl, byte ptr[edi + ecx] //move data byte to bl (part of ebx) to rotate
+			mov bl, byte ptr[edi + ecx] //move data byte to bl (part of ebx) to rotate
 			ror bl, 1
 			mov byte ptr[edi + ecx], bl
 			//xor byte ptr[edi + ecx], 'E'
