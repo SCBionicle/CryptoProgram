@@ -59,9 +59,14 @@ int encryptData(char *data, int dataLength)
 		AND ecx, 0 //clear ecx from any residual data from prior operations 
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
-		xor byte ptr[edi + ecx], 'A'		// Exclusive-or byte
+
+
+			//xor byte ptr[edi + ecx], 'A' //Seth		// Exclusive-or byte
+				mov bl, byte ptr[edi+ecx] //move data byte to bl (part of ebx) to rotate
+				rol bl, 1
+				mov byte ptr[edi+ecx], bl
 			xor byte ptr[edi + ecx], 'E'
-			xor byte ptr[edi + ecx], 'B'
+			xor byte ptr[edi + ecx], 'B' //Seth
 			xor byte ptr[edi + ecx], 'D'
 			xor byte ptr[edi + ecx], 'C'
 			inc ecx
