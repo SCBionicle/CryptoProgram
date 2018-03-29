@@ -14,6 +14,7 @@ int encryptData(char *data, int dataLength)
 	gdebug1 = 0;					// a couple of global variables that could be used for debugging
 	gdebug2 = 0;					// also can have a breakpoint in C code
 
+	int index=0;
 	// You can not declare any local variables in C, but should use resulti to indicate any errors
 	// Set up the stack frame and assign variables in assembly if you need to do so
 	// access the parameters BEFORE setting up your own stack frame
@@ -58,7 +59,7 @@ int encryptData(char *data, int dataLength)
 		AND ecx, 0 //clear ecx from any residual data from prior operations 
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
-			xor byte ptr[edi + ecx], 'A'		// Exclusive-or byte
+		xor byte ptr[edi + ecx], 'A'		// Exclusive-or byte
 			xor byte ptr[edi + ecx], 'E'
 			xor byte ptr[edi + ecx], 'B'
 			xor byte ptr[edi + ecx], 'D'
