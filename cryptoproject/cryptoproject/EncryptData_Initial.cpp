@@ -55,21 +55,15 @@ int encryptData(char *data, int dataLength)
 		// (gptrPasswordHash or gPasswordHash), (gptrKey or gkey), gNumRounds
 		
 		// simple example that xors 2nd byte of data with 14th byte in the key file
-			AND ecx, 0 //clear ecx from any residual data from prior operations
-			mov edi, data				// Put ADDRESS of first data element into edi, 
-			index DD
-		Start: // start of the loop 
-			mov index, ecx //save ecx 
-			firstLoop:
-				xor ecx,ecx //clear ecx
-				mov eax, CRYPTO_ORDER // have eax hold crypto_order
-				xor byte ptr[edi], [al + ecx] // Exclusive-or byte
-				inc ecx
-				cmp ecx,5 // compare to see if ecx is equal to the number of char in cyrpto_order
-				jb firstLoop //jump back to loop until cyrpto order is finished
-			mov ecx, index //load ecx for file back in
-			inc ecx 
-			mov edi, [edi + ecx]
+		AND ecx, 0 //clear ecx from any residual data from prior operations 
+			mov edi, data				// Put ADDRESS of first data element into edi,
+		Start : // start of the loop  
+			xor byte ptr[edi + ecx], 'A'		// Exclusive-or byte
+			xor byte ptr[edi + ecx], 'E'
+			xor byte ptr[edi + ecx], 'B'
+			xor byte ptr[edi + ecx], 'D'
+			xor byte ptr[edi + ecx], 'C'
+			inc ecx
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
 			jb Start // jump to start of loop if ecx is smaller than datalength 
 	}
