@@ -57,12 +57,23 @@ int decryptData(char *data, int dataLength)
 		AND ecx, 0 //clear ecx from any residual data from prior operations 
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
-			xor byte ptr[edi + ecx], 'A'		// Seth 
-			xor byte ptr[edi + ecx], 'E'		
-			xor byte ptr[edi + ecx], 'B'		//Seth
-			xor byte ptr[edi + ecx], 'D'		//Eddie
+			//xor byte ptr[edi + ecx], 'A'		// Seth 
+			//xor byte ptr[edi + ecx], 'E'		
+			//xor byte ptr[edi + ecx], 'B'		//Seth
+			//xor byte ptr[edi + ecx], 'D'		//Eddie
 
-			xor byte ptr[edi + ecx], 'C'		//Eddie
+			//xor byte ptr[edi + ecx], 'C'		//Eddie
+			mov	al, byte ptr[edi+ecx]
+			xor bl, bl  // BX to zero
+			mov cl, 8
+		RLOOP:
+			rcr al, 1
+			rcl bl, 1
+			loop RLOOP // Do 8 times
+			
+			mov al, bl
+			mov	byte ptr[edi+ecx], al
+			
 			inc ecx
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
 			jb Start // jump to start of loop if ecx is smaller than datalength 
