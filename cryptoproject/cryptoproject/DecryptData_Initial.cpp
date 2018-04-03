@@ -58,6 +58,7 @@ int decryptData(char *data, int dataLength)
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
 		//xor byte ptr[edi + ecx], 'A'		// Seth - Exclusive-or byte
+			push ecx //store ecx for outer loop index
 			mov bl, byte ptr[edi + ecx] //move data byte to bl (part of ebx) to rotate
 			ror bl, 1
 			mov byte ptr[edi + ecx], bl
@@ -69,11 +70,14 @@ int decryptData(char *data, int dataLength)
 			shl bl, 4//lower->upper
 			add bl, bh //add lower to upper
 			mov byte ptr[edi + ecx], bl //move back to memory
+
+			//////////////List, disregard//////////////////
 			//xor byte ptr[edi + ecx], 'D'
 			//xor byte ptr[edi + ecx], 'C'
 			//xor byte ptr[edi + ecx], 'A'		// Seth 
 			//xor byte ptr[edi + ecx], 'E'		
 			//xor byte ptr[edi + ecx], 'B'		//Seth
+			//////////////End List////////////////////////
 			//xor byte ptr[edi + ecx], 'D'		//Eddie
 
 			//xor byte ptr[edi + ecx], 'C'		//Eddie
@@ -88,6 +92,7 @@ int decryptData(char *data, int dataLength)
 			mov al, bl
 			mov	byte ptr[edi+ecx], al
 			
+			pop ecx //restore ecx for outer loop index
 			inc ecx
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
 			jb Start // jump to start of loop if ecx is smaller than datalength 

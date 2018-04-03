@@ -56,10 +56,10 @@ int encryptData(char *data, int dataLength)
 		// (gptrPasswordHash or gPasswordHash), (gptrKey or gkey), gNumRounds
 		
 		// simple example that xors 2nd byte of data with 14th byte in the key file
-		AND ecx, 0 //clear ecx from any residual data from prior operations 
+		xor ecx, ecx //clear ecx from any residual data from prior operations 
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
-
+		push ecx //store ecx for outer loop index
 			//xor byte ptr[edi + ecx], 'A' //Seth		// Exclusive-or byte
 				mov bl, byte ptr[edi+ecx] //move data byte to bl (part of ebx) to rotate
 				rol bl, 1
@@ -86,6 +86,7 @@ int encryptData(char *data, int dataLength)
 			mov al, bl
 			mov	byte ptr[edi + ecx], al
 			
+			pop ecx //restore ecx for outer loop index
 			inc ecx
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
 			jb Start // jump to start of loop if ecx is smaller than datalength 
