@@ -58,11 +58,12 @@ int decryptData(char *data, int dataLength)
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
 		//xor byte ptr[edi + ecx], 'A'		// Seth - Exclusive-or byte
+			push ecx //store ecx for outer loop index
 			mov bl, byte ptr[edi + ecx] //move data byte to bl (part of ebx) to rotate
 			ror bl, 1
 			mov byte ptr[edi + ecx], bl
 			//xor byte ptr[edi + ecx], 'E'
-		//xor byte ptr[edi + ecx], 'B' - Seth
+			//xor byte ptr[edi + ecx], 'B' - Seth
 			mov bl, byte ptr[edi + ecx] //bh = upper nibble, bl = lower nibble
 			mov bh, bl
 			shr bh, 4 //upper->lower
@@ -70,7 +71,7 @@ int decryptData(char *data, int dataLength)
 			add bl, bh //add lower to upper
 			mov byte ptr[edi + ecx], bl //move back to memory
 			
-			//xor byte ptr[edi + ecx], 'D'		//Eddie
+		//xor byte ptr[edi + ecx], 'D'		//Eddie
 		//xor byte ptr[edi + ecx], 'C'
 			mov al, byte ptr[edi + ecx]
 			xor bl, bl  // bl to zero
