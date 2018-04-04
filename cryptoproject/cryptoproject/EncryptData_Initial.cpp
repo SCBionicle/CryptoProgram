@@ -74,21 +74,21 @@ int encryptData(char *data, int dataLength)
 				mov byte ptr[edi+ecx], bl //move back to memory
 			//xor byte ptr[edi + ecx], 'D'
 		
-			//xor byte ptr[edi + ecx], 'C'
-			mov	al, byte ptr[edi + ecx]
+		//xor byte ptr[edi + ecx], 'C'
 			xor bl, bl  // bl to zero
-			mov cl, 8
-		RLOOP:
-			rcr al, 1
+			mov index,0
+		CLOOP:
+			rcr byte ptr[edi+ecx], 1
 			rcl bl, 1
-			loop RLOOP // Do 8 times
+			inc index
+			cmp index, 7
+			jb CLOOP // Do 8 times
 
-			mov al, bl
-			mov	byte ptr[edi + ecx], al
+			mov	byte ptr[edi + ecx], bl 
 			
 			inc ecx
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
-			jb Start // jump to start of loop if ecx is smaller than datalength 
+			jb Start // jump to start of loop if ecx is smaller than datalength
 	}
 	return resulti;
 } // encryptData
