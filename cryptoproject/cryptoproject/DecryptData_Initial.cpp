@@ -72,17 +72,17 @@ int decryptData(char *data, int dataLength)
 			
 			//xor byte ptr[edi + ecx], 'D'		//Eddie
 		//xor byte ptr[edi + ecx], 'C'
+			mov al, byte ptr[edi + ecx]
 			xor bl, bl  // bl to zero
-			mov index, 0
+			push ecx 
+			mov cx,8
 		CLOOP:
-			rcr byte ptr[edi + ecx], 1
+			rcr al, 1
 			rcl bl, 1
-			inc index
-			cmp index, 7
-			jb CLOOP // Do 8 times
-
+			loop CLOOP // Do 8 times
 			mov	byte ptr[edi + ecx], bl
-
+			pop ecx
+			
 			inc ecx
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
 			jb Start // jump to start of loop if ecx is smaller than datalength 
