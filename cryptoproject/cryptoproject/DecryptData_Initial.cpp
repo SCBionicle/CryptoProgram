@@ -57,8 +57,7 @@ int decryptData(char *data, int dataLength)
 		AND ecx, 0 //clear ecx from any residual data from prior operations 
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
-		//xor byte ptr[edi + ecx], 'A'		// Seth - Exclusive-or byte
-			push ecx //store ecx for outer loop index
+			//xor byte ptr[edi + ecx], 'A'		// Seth - Exclusive-or byte
 			mov bl, byte ptr[edi + ecx] //move data byte to bl (part of ebx) to rotate
 			ror bl, 1
 			mov byte ptr[edi + ecx], bl
@@ -70,17 +69,36 @@ int decryptData(char *data, int dataLength)
 			shl bl, 4//lower->upper
 			add bl, bh //add lower to upper
 			mov byte ptr[edi + ecx], bl //move back to memory
-			
-		//xor byte ptr[edi + ecx], 'D'		//Eddie
+
+			//xor byte ptr[edi + ecx], 'D'		//Eddie
+			mov al, byte ptr[edi + ecx]
+			push ecx 
+			mov cx, 4
+			xor bl, bl
+			xor bh, bh
+			DLOOP:
+				rcr al, 1
+				rcr bl, 1
+				loop DLOOP
+			mov cx, 4
+			DLOOP2:
+				rcr al, 1
+				rcr bh, 1
+				loop DLOOP2
+			rol bl, 9
+			ror bh, 9
+			add bl, bh
+			pop ecx 
+			mov byte ptr[edi+ecx], bl
 		//xor byte ptr[edi + ecx], 'C'
 			mov al, byte ptr[edi + ecx]
 			xor bl, bl  // bl to zero
 			push ecx 
 			mov cx,8
-		CLOOP:
-			rcr al, 1
-			rcl bl, 1
-			loop CLOOP // Do 8 times
+			CLOOP:
+				rcr al, 1
+				rcl bl, 1
+				loop CLOOP // Do 8 times
 			mov	byte ptr[edi + ecx], bl
 			pop ecx
 			

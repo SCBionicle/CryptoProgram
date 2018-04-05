@@ -57,37 +57,69 @@ int encryptData(char *data, int dataLength)
 		
 		// simple example that xors 2nd byte of data with 14th byte in the key file
 		xor ecx, ecx //clear ecx from any residual data from prior operations 
-			mov edi, data				// Put ADDRESS of first data element into edi,
+		mov edi, data				// Put ADDRESS of first data element into edi,
+		
 		Start : // start of the loop  
-		push ecx //store ecx for outer loop index
 			//xor byte ptr[edi + ecx], 'A' //Seth		// Exclusive-or byte
-				mov bl, byte ptr[edi+ecx] //move data byte to bl (part of ebx) to rotate
-				rol bl, 1
-				mov byte ptr[edi+ecx], bl
+			mov bl, byte ptr[edi+ecx] //move data byte to bl (part of ebx) to rotate
+			rol bl, 1
+			mov byte ptr[edi+ecx], bl
 			//xor byte ptr[edi + ecx], 'E'
 			//xor byte ptr[edi + ecx], 'B' //Seth
-				mov bl, byte ptr[edi + ecx] //bh = upper nibble, bl = lower nibble
-				mov bh, bl
-				shr bh, 4 //upper->lower
-				shl bl, 4//lower->upper
-				add bl, bh //add lower to upper
-				mov byte ptr[edi+ecx], bl //move back to memory
-			//xor byte ptr[edi + ecx], 'D'
-		
+			mov bl, byte ptr[edi + ecx] //bh = upper nibble, bl = lower nibble
+			mov bh, bl
+			shr bh, 4 //upper->lower
+			shl bl, 4//lower->upper
+			add bl, bh //add lower to upper
+			mov byte ptr[edi+ecx], bl //move back to memory
+		//xor byte ptr[edi + ecx], 'D'
+			mov al, byte ptr[edi + ecx]
+			push ecx 
+			mov cx, 4
+			xor bl, bl
+			xor bh, bh
+			DLOOP:
+				rcr al, 1
+				rcr bl, 1
+				loop DLOOP
+			mov cx, 4
+			DLOOP2:
+				rcr al, 1
+				rcr bh, 1
+				loop DLOOP2
+			rcl bh,1
+			rcl bh,1
+			rcr al,1
+			ror bh,1
+			rcl al,1
+			rcr bh,1
+
+			rcl bl, 1
+			rcl bl, 1
+			rcr al, 1
+			rol bl, 1
+			rcl al, 1
+			rcr bl, 1
+			rcr bl, 1
+			rcr bl, 1
+
+			rol bh, 1
+			add bl, bh
+			pop ecx 
+			mov byte ptr[edi+ecx], bl
 		//xor byte ptr[edi + ecx], 'C'
 			mov al, byte ptr[edi + ecx]
 			xor bl, bl  // bl to zero
 			push ecx 
 			mov cx,8
-		CLOOP:
-			rcr al, 1
-			rcl bl, 1
-			loop CLOOP // Do 8 times
+			CLOOP:
+				rcr al, 1
+				rcl bl, 1
+				loop CLOOP // Do 8 times	
 			mov	byte ptr[edi + ecx], bl
-			pop ecx
-			
 			pop ecx //restore ecx for outer loop index
 			inc ecx
+			
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
 			jb Start // jump to start of loop if ecx is smaller than datalength
 	}
