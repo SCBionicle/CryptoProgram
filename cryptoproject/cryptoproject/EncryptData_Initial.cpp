@@ -57,14 +57,14 @@ int encryptData(char *data, int dataLength)
 		
 		// simple example that xors 2nd byte of data with 14th byte in the key file
 		xor ecx, ecx //clear ecx from any residual data from prior operations 
-		mov edi, data				// Put ADDRESS of first data element into edi,
-		
+			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
 			//xor byte ptr[edi + ecx], 'A' //Seth		// Exclusive-or byte
-			mov bl, byte ptr[edi+ecx] //move data byte to bl (part of ebx) to rotate
+		mov bl, byte ptr[edi + ecx] //move data byte to bl (part of ebx) to rotate
 			rol bl, 1
-			mov byte ptr[edi+ecx], bl
+			mov byte ptr[edi + ecx], bl
 			//xor byte ptr[edi + ecx], 'E'
+			
 			//xor byte ptr[edi + ecx], 'B' //Seth
 			mov bl, byte ptr[edi + ecx] //bh = upper nibble, bl = lower nibble
 			mov bh, bl
@@ -78,32 +78,36 @@ int encryptData(char *data, int dataLength)
 			mov cx, 4
 			xor bl, bl
 			xor bh, bh
-			DLOOP:
+			DLOOP://send lower four bits to upper half of bl 
 				rcr al, 1
 				rcr bl, 1
 				loop DLOOP
+			
+			ror bl, 4
 			mov cx, 4
-			DLOOP2:
+			
+			DLOOP2://send left over four bits into upper half of bh 
 				rcr al, 1
 				rcr bh, 1
 				loop DLOOP2
-			rcl bh,1
-			rcl bh,1
-			rcr al,1
-			ror bh,1
-			rcl al,1
-			rcr bh,1
+			rol bh,1
+			jc CARRYSET
+			jnc CONTINUE
+			
+			CARRYSET:
+				or bh, 0x10
+				xor bh, 0x01
+				jmp CONTINUE
+		CONTINUE:
+			ror bl,1
+			jc CARRYBL
+			jnc LAST
 
-			rcl bl, 1
-			rcl bl, 1
-			rcr al, 1
-			rol bl, 1
-			rcl al, 1
-			rcr bl, 1
-			rcr bl, 1
-			rcr bl, 1
-
-			rol bh, 1
+			CARRYBL:
+				or bl, 0x08
+				xor bl,0x80
+				jmp LAST
+		LAST: 
 			add bl, bh
 			pop ecx 
 			mov byte ptr[edi+ecx], bl

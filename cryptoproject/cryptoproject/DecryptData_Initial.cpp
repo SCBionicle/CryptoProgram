@@ -72,24 +72,44 @@ int decryptData(char *data, int dataLength)
 
 			//xor byte ptr[edi + ecx], 'D'		//Eddie
 			mov al, byte ptr[edi + ecx]
-			push ecx 
-			mov cx, 4
-			xor bl, bl
-			xor bh, bh
-			DLOOP:
+			push ecx // store index 
+			mov cx, 4// for obtaining nibbles
+			xor bl, bl//lower nibble
+			xor bh, bh//upper nibble
+			DLOOP ://send lower four bits to upper half of bl 
 				rcr al, 1
 				rcr bl, 1
 				loop DLOOP
 			mov cx, 4
-			DLOOP2:
+
+			DLOOP2://send left over four bits into upper half of bh 
 				rcr al, 1
 				rcr bh, 1
 				loop DLOOP2
-			rol bl, 9
-			ror bh, 9
-			add bl, bh
-			pop ecx 
-			mov byte ptr[edi+ecx], bl
+			ror bh, 4 //since shift will be right shift to lower nibble
+			rol bl, 1// left shift 
+			jc CARRYSET //  if there is a one proceed to function
+			jnc CONTINUE// else continue to next operation
+
+			CARRYSET ://if cf has a one
+				or bl, 0x10 //set 5th bit to 1
+				xor bl, 0x01//clear lower nibble
+				jmp CONTINUE//continue with program
+			CONTINUE :
+				ror bh, 1 // shift right 
+				jc CARRYBL// if cf is set 
+				jnc LAST//else finish step 
+
+			CARRYBL:
+				or bh, 0x08// set 4th bit to 1
+				xor bh, 0x80// clear upper nibble 
+				jmp LAST
+			LAST:
+				rol bh,4 // shift nibbles to upper half
+				ror bl,4// shift nibbles to lower half
+				add bl, bh// put back together and added it back to the data
+				pop ecx
+				mov byte ptr[edi + ecx], bl
 		//xor byte ptr[edi + ecx], 'C'
 			mov al, byte ptr[edi + ecx]
 			xor bl, bl  // bl to zero

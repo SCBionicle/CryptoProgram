@@ -1,0 +1,34 @@
+mov al, byte ptr[edi + ecx]
+			push ecx 
+			mov cx, 4
+			xor bl, bl
+			xor bh, bh
+			DLOOP://send lower four bits to upper half of bl 
+				rcr al, 1
+				rcr bl, 1
+				loop DLOOP
+			mov cx, 4
+			DLOOP2://send left over four bits into upper half of bh 
+				rcr al, 1
+				rcr bh, 1
+				loop DLOOP2
+			rcl bh,1
+			rcl bh,1
+			rcr al,1
+			ror bh,1
+			rcl al,1
+			rcr bh,1
+
+			rcl bl, 1
+			rcl bl,1
+			rcr al, 1
+			rol bl, 1
+			rcl al, 1
+			rcr bl, 1
+			rcr bl,1
+			rcr bl,1
+			
+			rol bl,4
+			add bl, bh
+			pop ecx 
+			mov byte ptr[edi+ecx], bl
