@@ -57,7 +57,8 @@ int decryptData(char *data, int dataLength)
 		AND ecx, 0 //clear ecx from any residual data from prior operations 
 			mov edi, data				// Put ADDRESS of first data element into edi,
 		Start : // start of the loop  
-			//xor byte ptr[edi + ecx], 'A'		// Seth - Exclusive-or byte
+	
+		//xor byte ptr[edi + ecx], 'A'		// Seth - Exclusive-or byte
 			mov bl, byte ptr[edi + ecx] //move data byte to bl (part of ebx) to rotate
 			ror bl, 1
 			mov byte ptr[edi + ecx], bl
@@ -69,24 +70,15 @@ int decryptData(char *data, int dataLength)
 			shl bl, 4//lower->upper
 			add bl, bh //add lower to upper
 			mov byte ptr[edi + ecx], bl //move back to memory
-
+		
 			//xor byte ptr[edi + ecx], 'D'		//Eddie
 			mov al, byte ptr[edi + ecx]
-			push ecx // store index 
-			mov cx, 4// for obtaining nibbles
-			xor bl, bl//lower nibble
-			xor bh, bh//upper nibble
-			DLOOP ://send lower four bits to upper half of bl 
-				rcr al, 1
-				rcr bl, 1
-				loop DLOOP
-			mov cx, 4
-
-			DLOOP2://send left over four bits into upper half of bh 
-				rcr al, 1
-				rcr bh, 1
-				loop DLOOP2
-			ror bh, 4 //since shift will be right shift to lower nibble
+			mov bl, al
+			mov dl, al
+			and dl, 0xF0
+			and bl, 0x0F
+			rol bl, 4
+			ror dl, 4
 			rol bl, 1// left shift 
 			jc CARRYSET //  if there is a one proceed to function
 			jnc CONTINUE// else continue to next operation
@@ -96,35 +88,35 @@ int decryptData(char *data, int dataLength)
 				xor bl, 0x01//clear lower nibble
 				jmp CONTINUE//continue with program
 			CONTINUE :
-				ror bh, 1 // shift right 
-				jc CARRYBL// if cf is set 
+				ror dl, 1 // shift right 
+				jc CARRYDL// if cf is set 
 				jnc LAST//else finish step 
 
-			CARRYBL:
-				or bh, 0x08// set 4th bit to 1
-				xor bh, 0x80// clear upper nibble 
+			CARRYDL:
+				or dl, 0x08// set 4th bit to 1
+				xor dl, 0x80// clear upper nibble 
 				jmp LAST
 			LAST:
-				rol bh,4 // shift nibbles to upper half
+				rol dl,4 // shift nibbles to upper half
 				ror bl,4// shift nibbles to lower half
-				add bl, bh// put back together and added it back to the data
-				pop ecx
+				add bl, dl// put back together and added it back to the data
 				mov byte ptr[edi + ecx], bl
-		//xor byte ptr[edi + ecx], 'C'
-			mov al, byte ptr[edi + ecx]
-			xor bl, bl  // bl to zero
-			push ecx 
-			mov cx,8
-			CLOOP:
-				rcr al, 1
-				rcl bl, 1
-				loop CLOOP // Do 8 times
-			mov	byte ptr[edi + ecx], bl
-			pop ecx
-			
-			inc ecx
-			cmp ecx, dataLength // check to see if we have reached the end of the data file 
-			jb Start // jump to start of loop if ecx is smaller than datalength 
+
+	//xor byte ptr[edi + ecx], 'C'
+				mov al, byte ptr[edi + ecx]
+				xor bl, bl  // set bl to 0x00
+				push ecx //store ecx for later use
+				mov cx,8 //set up loop
+				CLOOP:
+					rcr al, 1
+					rcl bl, 1
+					loop CLOOP // Do 8 times
+				pop ecx //restore ecx 
+				mov	byte ptr[edi + ecx], bl
+				inc ecx
+				cmp ecx, dataLength // check to see if we have reached the end of the data file 
+				jb Start // jump to start of loop if ecx is smaller than datalength 
+
 	}
 	return resulti;
 } // decryptData
