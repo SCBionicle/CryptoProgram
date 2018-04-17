@@ -32,9 +32,11 @@ int encryptData(char *data, int dataLength)
 			rol bl, 1
 			mov byte ptr[edi + ecx], bl
 			//xor byte ptr[edi + ecx], 'E'MAX
+			mov dl, byte ptr[edi+ecx]
 			lea  esi, gEncodeTable
 			movzx edx, dl
-			mov byte ptr[esi+ecx], dl
+			mov dl, byte ptr[esi+edx]
+			mov byte ptr[edi+ecx], dl
 			//xor byte ptr[edi + ecx], 'B' //Seth 
 			mov bl, byte ptr[edi + ecx] //bh = upper nibble, bl = lower nibble
 			mov bh, bl
@@ -70,16 +72,16 @@ int encryptData(char *data, int dataLength)
 			mov byte ptr[edi + ecx], bl
 
 		//xor byte ptr[edi + ecx], 'C' 
-			mov al, byte ptr[edi + ecx]
-			push ecx;
-			xor dl, dl  // bl to zero	 
-			mov cx,8
-			CLOOP:
-				rcr al, 1
+		mov al, byte ptr[edi + ecx]
+		xor dl, dl  // set bl to 0x00
+		xor bl, bl
+	CLOOP :
+			rcr al, 1
 				rcl dl, 1
-				loop CLOOP // Do 8 times
-			pop ecx //restore ecx for outer loop index	
-			mov	byte ptr[edi + ecx], dl		
+				inc bl
+				cmp bl, 8
+				jne CLOOP // Do 8 times
+				mov	byte ptr[edi + ecx], dl
 			
 			inc ecx
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 

@@ -23,15 +23,15 @@ int decryptData(char *data, int dataLength)
 	Start : // start of the loop  
 //xor byte ptr[edi + ecx], 'C' 
 		mov al, byte ptr[edi + ecx]
-			push ecx //store ecx for later use
-			xor dl, dl  // set bl to 0x00
-			mov cx, 8 //set up loop
+		xor dl, dl  // set bl to 0x00
+		xor bl, bl
 		CLOOP :
-			  rcr al, 1
-			  rcl dl, 1
-			  loop CLOOP // Do 8 times
-			  pop ecx //restore ecx 
-			  mov	byte ptr[edi + ecx], dl
+			rcr al, 1
+			rcl dl, 1
+			inc bl
+			cmp bl, 8
+			jne CLOOP // Do 8 times
+			mov	byte ptr[edi + ecx], dl
 
 //xor byte ptr[edi + ecx], 'D'		//Eddie
 			  mov al, byte ptr[edi + ecx]
@@ -71,9 +71,11 @@ int decryptData(char *data, int dataLength)
 			add bl, bh //add lower to upper
 			mov byte ptr[edi + ecx], bl //move back to memory
 //xor byte ptr[edi + ecx], 'E' MAX
+			mov dl, byte ptr[edi+ecx] 
 			lea esi,  gDecodeTable
 			movzx edx, dl
-			mov  byte ptr[esi  +ecx], dl
+			mov  dl, byte ptr[esi + edx]
+			mov byte ptr[edi+ecx], dl
 //////////////////////////////////////////////////////////////////////////////////////////////////	
 		//xor byte ptr[edi + ecx], 'A'		// Seth - Exclusive-or byte
 			mov bl, byte ptr[edi + ecx] //move data byte to bl (part of ebx) to rotate
