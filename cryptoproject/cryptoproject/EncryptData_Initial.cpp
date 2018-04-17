@@ -39,10 +39,7 @@ int encryptData(char *data, int dataLength)
 			mov byte ptr[edi+ecx], dl
 			//xor byte ptr[edi + ecx], 'B' //Seth 
 			mov bl, byte ptr[edi + ecx] //bh = upper nibble, bl = lower nibble
-			mov bh, bl
-			shr bh, 4 //upper->lower
 			shl bl, 4//lower->upper
-			add bl, bh //add lower to upper
 			mov byte ptr[edi+ecx], bl //move back to memory
 	
 ////////////////////////////////////////////////////////////////////////////////////
@@ -75,13 +72,13 @@ int encryptData(char *data, int dataLength)
 		mov al, byte ptr[edi + ecx]
 		xor dl, dl  // set bl to 0x00
 		xor bl, bl
-	CLOOP :
-			rcr al, 1
+			CLOOP :
+				rcr al, 1
 				rcl dl, 1
 				inc bl
 				cmp bl, 8
 				jne CLOOP // Do 8 times
-				mov	byte ptr[edi + ecx], dl
+			mov	byte ptr[edi + ecx], dl
 			
 			inc ecx
 			cmp ecx, dataLength // check to see if we have reached the end of the data file 
@@ -89,3 +86,5 @@ int encryptData(char *data, int dataLength)
 	}
 	return resulti;
 } // encryptData
+//aebdc - Ortiz
+//
