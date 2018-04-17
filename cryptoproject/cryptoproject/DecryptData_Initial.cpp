@@ -65,8 +65,11 @@ int decryptData(char *data, int dataLength)
 			mov byte ptr[edi + ecx], bl
 //xor byte ptr[edi + ecx], 'B' - Seth /
 			mov bl, byte ptr[edi + ecx] //bh = upper nibble, bl = lower nibble
-			rol bl, 4//lower->upper
-			mov byte ptr[edi + ecx], bl //move back to memory
+			mov bh, bl
+			shr bh, 4 //upper->lower
+			shl bl, 4//lower->upper
+			add bl, bh //add lower to upper
+			mov byte ptr[edi+ecx], bl //move back to memory
 //xor byte ptr[edi + ecx], 'E' MAX
 			mov dl, byte ptr[edi+ecx] 
 			lea esi,  gDecodeTable
