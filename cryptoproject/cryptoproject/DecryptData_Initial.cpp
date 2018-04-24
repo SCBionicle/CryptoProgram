@@ -29,15 +29,15 @@ int decryptData(char *data, int dataLength)
 			//starting index
 			mov ah, [esi + edx * 4]
 			mov al, [esi + edx * 4 + 1]
-			mov [esp+8],eax
+			mov [esp-8],eax
 			//hop count 
 			mov bh, [esi + edx * 4 + 2]
 			mov bl, [esi + edx * 4 + 3]
-			mov [esp+4], ebx
+			mov [esp-4], ebx
 			cmp bx, 0
 			jne Start
 			mov bx, 0xFFFF
-			mov[esp + 4], ebx
+			mov[esp - 4], ebx
 		Start : // start of the loop  
 		//xor byte ptr[edi + ecx], 'C' 
 		mov al, byte ptr[edi + ecx]
@@ -99,8 +99,8 @@ int decryptData(char *data, int dataLength)
 			ror bl, 1
 			mov byte ptr[edi + ecx], bl	
 		Hop:
-			mov eax, [esp + 8]//load index 
-			mov ebx, [esp + 4]//load hop count
+			mov eax, [esp - 8]//load index 
+			mov ebx, [esp - 4]//load hop count
 		Hopping:
 			xor edx, edx
 			lea esi, gkey//load global key into esi

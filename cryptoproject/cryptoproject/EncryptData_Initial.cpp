@@ -25,18 +25,18 @@ int encryptData(char *data, int dataLength)
 
 		// simple example that xors 2nd byte of data with 14th byte in the key file
 		mov edi, data// Put ADDRESS of first data element into edi,
-		SetIndex :
-			xor ecx, ecx //clear ecx from any residual data from prior operations 
+		SetIndex : // setup for obtaining index from PassHash, and hop count
+			xor ecx, ecx //clear registers from any residual data from prior operations 
 			xor edx, edx
 			xor ebx, ebx
 			xor eax, eax
-			lea esi, gPasswordHash
-			mov edx, iNumOfRounds
-			//starting index
+			lea esi, gPasswordHash //grap pointer 
+			mov edx, iNumOfRounds // self explanatory
+			//starting index, index = PasswordHash[rounds*4 + i]
 			mov ah, [esi + edx * 4]
 			mov al, [esi + edx * 4 + 1]
 			mov [esp-8],eax
-			//hop count 
+			//hop count , hopCount = 
 			mov bh, [esi + edx * 4 + 2]
 			mov bl, [esi + edx * 4 + 3]
 			mov [esp-4], ebx
