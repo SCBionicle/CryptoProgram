@@ -36,7 +36,7 @@ int encryptData(char *data, int dataLength)
 			mov ah, [esi + edx * 4]
 			mov al, [esi + edx * 4 + 1]
 			mov [esp-8],eax
-			//hop count , hopCount = 
+			//hop count , hopCount = gPasswordHash[ rounds*4 + i ]
 			mov bh, [esi + edx * 4 + 2]
 			mov bl, [esi + edx * 4 + 3]
 			mov [esp-4], ebx
