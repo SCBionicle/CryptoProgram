@@ -107,7 +107,7 @@ int encryptData(char *data, int dataLength)
 		CARRYBL :
 			or bl, 0x08// set 4th bit to 1 1000-1xxx
 			xor bl, 0x80//set 7th bit to 0 0000-1xxx
-			jmp LAST
+			jmp LAST 
 		LAST :
 			add dl, bl// set back together xxxx-xxxx
 			mov byte ptr[edi + ecx], dl
