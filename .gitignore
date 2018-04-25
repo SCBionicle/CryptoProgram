@@ -154,3 +154,8 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+cryptoproject/cryptoproject.VC.db
+cryptoproject/cryptoproject.VC.VC.opendb
+cryptoproject/cryptoproject/cryptoproject.vcxproj
+*.vcxproj
+cryptoproject/cryptoproject/cryptoproject.vcxproj
