@@ -20,7 +20,7 @@ int decryptData(char *data, int dataLength)
 		xor ecx, ecx //clear ecx from any residual data from prior operations 
 		mov edi, data				// Put ADDRESS of first data element into edi,
 	
-		SetIndex :  // setup for obtaining index from PassHash, and hop count
+		SetIndex :
 			xor edx, edx
 			xor ebx, ebx
 			xor eax, eax
